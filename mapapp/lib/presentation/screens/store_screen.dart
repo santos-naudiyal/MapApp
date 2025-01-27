@@ -1,4 +1,6 @@
-import 'package:flutter/material.dart';
+
+
+  import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:mapapp/data/services/store_services.dart';
@@ -35,26 +37,28 @@ class _StoreScreenState extends State<StoreScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final storeProvider = Provider.of<StoreProvider>(context);
-    final selectedStore = storeProvider.selectedStore;
+Widget build(BuildContext context) {
+  final storeProvider = Provider.of<StoreProvider>(context);
+  final selectedStore = storeProvider.selectedStore;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Stores',
-          style: TextStyle(
-              fontSize: 24, color: Colors.black, fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true, // Centers the title
-        backgroundColor: Colors.orange,
+  return Scaffold(
+    appBar: AppBar(
+      title: const Text(
+        'Stores',
+        style: TextStyle(
+            fontSize: 24, color: Colors.black, fontWeight: FontWeight.bold),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
+      centerTitle: true, 
+      backgroundColor: Colors.orange,
+    ),
+    body: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SingleChildScrollView( 
         child: Column(
           children: [
-            Expanded(
-              flex: 2,
+           
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.4, 
               child: Stack(
                 children: [
                   FlutterMap(
@@ -93,7 +97,7 @@ class _StoreScreenState extends State<StoreScreen> {
                       ),
                     ],
                   ),
-        
+
                   // Selected Store Details Card
                   if (selectedStore != null)
                     Positioned(
@@ -143,74 +147,74 @@ class _StoreScreenState extends State<StoreScreen> {
                 ],
               ),
             ),
-        
+
             // Store List Section
-            Expanded(
-              flex: 2,
-              child: ListView.builder(
-                itemCount: storeProvider.stores.length,
-                itemBuilder: (context, index) {
-                  final store = storeProvider.stores[index];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8.0,
-                        vertical: 6.0), // Add padding around the list items
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.amber),
-                        borderRadius: BorderRadius.circular(12),
+            ListView.builder(
+              physics: const NeverScrollableScrollPhysics(), 
+              shrinkWrap: true, 
+              itemCount: storeProvider.stores.length,
+              itemBuilder: (context, index) {
+                final store = storeProvider.stores[index];
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 8.0,
+                      vertical: 6.0), 
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.amber),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: ListTile(
+                      title: Text(
+                        store.storeLocation,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
                       ),
-                      child: ListTile(
-                        title: Text(
-                          store.storeLocation,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(store.storeAddress),
-                            const SizedBox(height: 4),
-                            Text(
-                              'Today, ${store.dayOfWeek} ${store.startTime} - ${store.endTime}',
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 12,
-                              ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(store.storeAddress),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Today, ${store.dayOfWeek} ${store.startTime} - ${store.endTime}',
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 12,
                             ),
-                          ],
-                        ),
-                        trailing: Text(
-                          '${store.distance.toStringAsFixed(2)} km',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
                           ),
+                        ],
+                      ),
+                      trailing: Text(
+                        '${store.distance.toStringAsFixed(2)} km',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
                         ),
-                        onTap: () {
-                          storeProvider.selectStore(store);
-                          _centerMap(store);
-                        },
-                        selected: storeProvider.selectedStore == store,
-                        selectedTileColor: Colors.orangeAccent.withOpacity(0.2),
-                        leading: Icon(
-                          Icons.store,
-                          color: storeProvider.selectedStore == store
-                              ? Colors.orange
-                              : Colors.black,
-                        ),
+                      ),
+                      onTap: () {
+                        storeProvider.selectStore(store);
+                        _centerMap(store);
+                      },
+                      selected: storeProvider.selectedStore == store,
+                      selectedTileColor: Colors.orangeAccent.withOpacity(0.2),
+                      leading: Icon(
+                        Icons.store,
+                        color: storeProvider.selectedStore == store
+                            ? Colors.orange
+                            : Colors.black,
                       ),
                     ),
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             ),
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }
